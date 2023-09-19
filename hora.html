@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Asistencia</title>
+    <style>
+        /* Estilo para agregar margen superior al div de los botones */
+        #botones {
+            margin-top: 20px; /* Puedes ajustar la cantidad de margen según tus preferencias */
+        }
+
+        /* Estilo para los botones */
+        button {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Estilo para los botones seleccionados */
+        .seleccionado {
+            background-color: #009966; /* Color personalizado (#009966) */
+            color: white;
+        }
+
+        /* Estilo para el botón Registrar cuando está activo (clicado) */
+        #registrar:active {
+            background-color: #00ccff; /* Cambiar a color celeste cuando se hace clic */
+        }
+    </style>
+</head>
+<body>
+    <h1>ASISTENCIA</h1>
+    <p id="fechaHora"></p>
+    <label for="zona">Selecciona una Zona:</label>
+    <select id="zona">
+        <option value="DELTA">DELTA</option>
+        <option value="BRAVO">BRAVO</option>
+        <option value="CHARLY">CHARLY</option>
+        <option value="FOXTROP">FOXTROP</option>
+        <option value="GAMMA">GAMMA</option>
+        <option value="ECO">ECO</option>
+        <option value="ALFA">ALFA</option>
+        <option value="DAMERO">DAMERO</option>
+    </select>
+
+    <div id="botones">
+        <button id="manana">Mañana</button>
+        <button id="tarde">Tarde</button>
+        <button id="noche">Noche</button>
+    </div>
+
+    <!-- Lista de asistentes -->
+    <div id="listaAsistentes" style="display: none;">
+        <h2>Lista de Asistentes</h2>
+        <ul id="asistentes">
+            <!-- Aquí se agregarán dinámicamente los nombres de los asistentes con menú desplegable -->
+        </ul>
+    </div>
+
+    <button id="registrar">Registrar</button>
+
+    <script>
+        // Función para mostrar la fecha y hora actual
+        function mostrarFechaHora() {
+            var fechaHoraElement = document.getElementById("fechaHora");
+            var fechaHora = new Date();
+            var opcionesFechaHora = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+            fechaHoraElement.textContent = fechaHora.toLocaleDateString('es-ES', opcionesFechaHora);
+        }
+
+        // Función para actualizar la fecha y hora cada segundo
+        setInterval(mostrarFechaHora, 1000);
+
+        var zonaSelect = document.getElementById("zona");
+        var mananaButton = document.getElementById("manana");
+        var tardeButton = document.getElementById("tarde");
+        var nocheButton = document.getElementById("noche");
+        var listaAsistentes = document.getElementById("listaAsistentes");
+        var asistentesList = document.getElementById("asistentes");
+        var registrarButton = document.getElementById("registrar");
+
+        // Datos de ejemplo para las listas de asistentes
+        var asistentesPorZonaYTurno = {
+            DELTA: {
+                manana: ["Huaringa Lagomarcino Leonardo", "XXX", "QQQ", "WWW", "RRR", "TTT", "HHH"],
+                tarde: ["Cahuana Castillo Cesar"],
+                noche: ["Caballero Leon Juan"]
+            },
+            
+            BRAVO: {
+                    manana: ["Nombre 1", "Nombre 2"],
+                    tarde: ["Nombre 3", "Nombre 4"],
+                    noche: ["Nombre 5", "Nombre 6"]
+                },
+
+                CHARLY: {
+                    manana: ["Nombre 11", "Nombre 22"],
+                    tarde: ["Nombre 33", "Nombre 44"],
+                    noche: ["Nombre 55", "Nombre 66"]
+                },
+
+                FOXTROP: {
+                    manana: ["Nombre 111", "Nombre 222"],
+                    tarde: ["Nombre 333", "Nombre 444"],
+                    noche: ["Nombre 555", "Nombre 666"]
+                },
+                GAMMA: {
+                    manana: ["Nombre 1111", "Nombre 2222"],
+                    tarde: ["Nombre 3333", "Nombre 4444"],
+                    noche: ["Nombre 5555", "Nombre 6666"]
+                },
+                ECO: {
+                    manana: ["Nombre 121", "Nombre 221"],
+                    tarde: ["Nombre 321", "Nombre 421"],
+                    noche: ["Nombre 521", "Nombre 621"]
+                },
+                ALFA: {
+                    manana: ["Nombre 143", "Nombre 243"],
+                    tarde: ["Nombre 343", "Nombre 443"],
+                    noche: ["Nombre 543", "Nombre 643"]
+                },
+
+                DAMERO: {
+                    manana: ["Nombre 154", "Nombre 254"],
+                    tarde: ["Nombre 354", "Nombre 454"],
+                    noche: ["Nombre 554", "Nombre 654"]
+                }
+            // Agrega más datos para otras zonas y turnos aquí
+        };
+
+        // Función para mostrar la lista de asistentes con menú desplegable
+        function mostrarLista(zona, turno) {
+            var asistentes = asistentesPorZonaYTurno[zona][turno];
+            asistentesList.innerHTML = "";
+
+            asistentes.forEach(function (nombre) {
+                var li = document.createElement("li");
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+
+                // Crear el menú desplegable con opciones
+                var select = document.createElement("select");
+                select.innerHTML = '<option value="DM">DM</option><option value="FALTA">FALTA</option><option value="VACACIONES">VACACIONES</option><option value="COMPENSATORIO">COMPENSATORIO</option>';
+
+                // Agregar evento para capturar la selección del menú desplegable
+                select.addEventListener("change", function () {
+                    var opcionSeleccionada = select.value;
+                    // Aquí puedes realizar acciones adicionales con la opción seleccionada, como almacenarla.
+                    console.log("Opción seleccionada para " + nombre + ": " + opcionSeleccionada);
+                });
+
+                li.appendChild(checkbox);
+                li.appendChild(document.createTextNode(nombre + " "));
+                li.appendChild(select);
+                asistentesList.appendChild(li);
+
+                // Obtener todos los checkboxes en la lista de asistentes
+                var checkboxes = asistentesList.querySelectorAll("input[type='checkbox']");
+
+                // Agregar un evento de cambio a cada checkbox
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.addEventListener("change", function () {
+                        var select = checkbox.nextElementSibling; // Obtener el elemento select adyacente al checkbox
+
+                        if (checkbox.checked) {
+                            select.style.display = "none"; // Ocultar el select si el checkbox está marcado
+                        } else {
+                            select.style.display = "inline-block"; // Mostrar el select si el checkbox no está marcado
+                        }
+                    });
+                });
+            });
+
+            listaAsistentes.style.display = "block";
+        }
+
+        // Función para cambiar el color del botón seleccionado
+        function cambiarColorBotonSeleccionado(button) {
+            [mananaButton, tardeButton, nocheButton].forEach(function (btn) {
+                if (btn === button) {
+                    btn.classList.add("seleccionado"); // Agregar la clase "seleccionado" al botón seleccionado
+                } else {
+                    btn.classList.remove("seleccionado"); // Eliminar la clase "seleccionado" de otros botones
+                }
+            });
+        }
+
+        // Función para registrar la información
+        function registrarInformacion() {
+            // Recorrer la lista de asistentes
+            var asistentes = asistentesList.getElementsByTagName("li");
+            for (var i = 0; i < asistentes.length; i++) {
+                var li = asistentes[i];
+                var nombre = li.textContent.trim();
+                var checkbox = li.querySelector("input[type='checkbox']");
+                var estaPresente = checkbox.checked;
+                var select = li.querySelector("select");
+                var estadoSeleccionado = select.value;
+
+                // Aquí puedes realizar acciones con la información, como almacenarla o enviarla a un servidor
+                console.log("Nombre: " + nombre);
+                console.log("¿Presente?: " + estaPresente);
+                console.log("Estado seleccionado: " + estadoSeleccionado);
+                console.log("------");
+            }
+        }
+
+        // Agregar eventos de clic a los botones
+        mananaButton.addEventListener("click", function () {
+            var zonaSeleccionada = zonaSelect.value;
+            mostrarLista(zonaSeleccionada, "manana");
+            cambiarColorBotonSeleccionado(mananaButton);
+        });
+
+        tardeButton.addEventListener("click", function () {
+            var zonaSeleccionada = zonaSelect.value;
+            mostrarLista(zonaSeleccionada, "tarde");
+            cambiarColorBotonSeleccionado(tardeButton);
+        });
+
+        nocheButton.addEventListener("click", function () {
+            var zonaSeleccionada = zonaSelect.value;
+            mostrarLista(zonaSeleccionada, "noche");
+            cambiarColorBotonSeleccionado(nocheButton);
+        });
+
+        // Agregar un evento de cambio al menú desplegable de zona
+        zonaSelect.addEventListener("change", function () {
+            listaAsistentes.style.display = "none"; // Ocultar la lista al cambiar de zona
+            cambiarColorBotonSeleccionado(null); // Restablecer colores de botones
+        });
+
+        // Agregar un evento de clic al botón "Registrar"
+        registrarButton.addEventListener("click", function () {
+            var confirmacion = window.confirm("¿Desea enviar la información?");
+            if (confirmacion) {
+                registrarInformacion();
+                alert("La información ha sido enviada.");
+            } else {
+                alert("La información no ha sido enviada.");
+            }
+        });
+    </script>
+</body>
+</html>
